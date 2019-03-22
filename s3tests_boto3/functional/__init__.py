@@ -143,8 +143,7 @@ def setup():
             'To run tests, point environment '
             + 'variable S3TEST_CONF to a config file.',
             )
-    with file(path) as f:
-        cfg.readfp(f)
+    cfg.read(path)
 
     if not cfg.defaults():
         raise RuntimeError('Your config file is missing the DEFAULT section!')
