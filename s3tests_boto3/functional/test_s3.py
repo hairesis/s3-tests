@@ -12,6 +12,7 @@ import threading
 import re
 import pytz
 from io import StringIO
+import six
 from collections import OrderedDict
 import requests
 import json
@@ -2143,7 +2144,8 @@ def test_object_metadata_replaced_on_put():
 def test_object_write_file():
     bucket_name = get_new_bucket()
     client = get_client()
-    data = StringIO('bar')
+    data_str = 'bar'
+    data = bytes(data_str, 'utf-8')
     client.put_object(Bucket=bucket_name, Key='foo', Body=data)
     response = client.get_object(Bucket=bucket_name, Key='foo')
     body = _get_body(response)
@@ -2195,7 +2197,9 @@ def test_post_object_authenticated_request():
 
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2235,7 +2239,8 @@ def test_post_object_authenticated_no_content_type():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2276,7 +2281,8 @@ def test_post_object_authenticated_request_bad_access_key():
 
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2324,7 +2330,8 @@ def test_post_object_set_invalid_success_code():
 
     r = requests.post(url, files = payload)
     eq(r.status_code, 204)
-    eq(r.content,'')
+    content = r.content.decode()
+    eq(content,'')
 
 @attr(resource='object')
 @attr(method='post')
@@ -2350,7 +2357,8 @@ def test_post_object_upload_larger_than_chunk():
 
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2391,7 +2399,8 @@ def test_post_object_set_key_from_filename():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2431,7 +2440,8 @@ def test_post_object_ignored_header():
 
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2467,7 +2477,8 @@ def test_post_object_case_insensitive_condition_fields():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2505,7 +2516,8 @@ def test_post_object_escaped_field_values():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2548,7 +2560,8 @@ def test_post_object_success_redirect_action():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2590,7 +2603,8 @@ def test_post_object_invalid_signature():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2626,7 +2640,8 @@ def test_post_object_invalid_access_key():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2662,7 +2677,8 @@ def test_post_object_invalid_date_format():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2697,7 +2713,8 @@ def test_post_object_no_key_specified():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2733,7 +2750,8 @@ def test_post_object_missing_signature():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2768,7 +2786,8 @@ def test_post_object_missing_policy_condition():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2805,7 +2824,8 @@ def test_post_object_user_specified_header():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2844,7 +2864,8 @@ def test_post_object_request_missing_policy_specified_field():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2880,7 +2901,8 @@ def test_post_object_condition_is_case_sensitive():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2916,7 +2938,8 @@ def test_post_object_expires_is_case_sensitive():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2952,7 +2975,8 @@ def test_post_object_expired_policy():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -2989,7 +3013,8 @@ def test_post_object_invalid_request_field_value():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3024,7 +3049,8 @@ def test_post_object_missing_expires_condition():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3052,7 +3078,8 @@ def test_post_object_missing_conditions_list():
     policy_document = {"expiration": expires.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3088,7 +3115,8 @@ def test_post_object_upload_size_limit_exceeded():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3124,7 +3152,8 @@ def test_post_object_missing_content_length_argument():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3160,7 +3189,8 @@ def test_post_object_invalid_content_length_argument():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3196,7 +3226,8 @@ def test_post_object_upload_size_below_minimum():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -3228,7 +3259,8 @@ def test_post_object_empty_conditions():
     }
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -9702,7 +9734,8 @@ def test_encryption_sse_c_post_object_authenticated_request():
 
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -10014,7 +10047,8 @@ def test_sse_kms_post_object_authenticated_request():
 
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
@@ -10770,7 +10804,8 @@ def test_post_object_tags_authenticated_request():
     xml_input_tagset = "<Tagging><TagSet><Tag><Key>0</Key><Value>0</Value></Tag><Tag><Key>1</Key><Value>1</Value></Tag></TagSet></Tagging>"
 
     json_policy_document = json.JSONEncoder().encode(policy_document)
-    policy = base64.b64encode(json_policy_document)
+    bytes_json_policy_document = bytes(json_policy_document, 'utf-8')
+    policy = base64.b64encode(bytes_json_policy_document)
     aws_secret_access_key = get_main_aws_secret_key()
     aws_access_key_id = get_main_aws_access_key()
 
