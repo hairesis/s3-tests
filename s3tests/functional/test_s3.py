@@ -749,7 +749,7 @@ class FakeFile(object):
     """
     def __init__(self, char='A', interrupt=None):
         self.offset = 0
-        self.char = char
+        self.char = bytes(char, 'utf-8')
         self.interrupt = interrupt
 
     def seek(self, offset, whence=os.SEEK_SET):
@@ -796,7 +796,7 @@ class FakeFileVerifier(object):
         if self.char == None:
             self.char = data[0]
         self.size += size
-        eq(data, self.char*size)
+        eq(data.decode(), self.char*size)
 
 def _verify_atomic_key_data(key, size=-1, char=None):
     """
