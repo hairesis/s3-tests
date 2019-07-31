@@ -125,11 +125,11 @@ def nuke_prefixed_buckets(prefix, client=None):
             for obj in delete_markers:
                 response = client.delete_object(Bucket=bucket_name,Key=obj[0],VersionId=obj[1])
             try:
-                client.delete_bucket(Bucket=bucket_name)
-            except ClientError, e:
+                response = client.delete_bucket(Bucket=bucket_name)
+            except ClientError:
                 # if DELETE times out, the retry may see NoSuchBucket
-                if e.response['Error']['Code'] != 'NoSuchBucket':
-                    raise e
+                if response['Error']['Code'] != 'NoSuchBucket':
+                    raise ClientError
                 pass
 
     print('Done with cleanup of buckets in tests.')
